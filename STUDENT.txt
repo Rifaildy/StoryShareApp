@@ -1,0 +1,2 @@
+Notes:
+- This project uses Leaflet for maps, which doesn't require an API key.

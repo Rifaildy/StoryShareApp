@@ -1,0 +1,155 @@
+@media screen and (min-width: 768px) {
+  .app-bar {
+    grid-template-columns: 1fr auto;
+    padding: 16px 32px;
+  }
+
+  .app-bar .app-bar__brand h1 {
+    font-size: 28px;
+  }
+
+  .app-bar .app-bar__menu {
+    display: none;
+  }
+
+  .app-bar .app-bar__navigation {
+    position: static;
+    width: auto;
+    box-shadow: none;
+    background-color: transparent;
+    padding: 0;
+  }
+
+  .app-bar .app-bar__navigation ul {
+    display: flex;
+    justify-content: flex-end;
+  }
+
+  .app-bar .app-bar__navigation ul li {
+    display: inline-block;
+    border-bottom: none;
+    padding: 0 16px;
+  }
+
+  .app-bar .app-bar__navigation ul li a {
+    font-size: 16px;
+    padding: 8px 0;
+  }
+
+  .hero {
+    padding: 120px 20px;
+  }
+
+  .hero h1 {
+    font-size: 56px;
+  }
+
+  .hero p {
+    font-size: 20px;
+  }
+
+  .stories {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .camera-controls {
+    flex-direction: row;
+  }
+}
+
+@media screen and (min-width: 1024px) {
+  .stories {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+@media screen and (max-width: 767px) {
+  main {
+    padding: 16px;
+  }
+
+  .content__heading {
+    font-size: 24px;
+  }
+
+  .hero {
+    padding: 60px 20px;
+  }
+
+  .hero h1 {
+    font-size: 36px;
+  }
+
+  .hero p {
+    font-size: 16px;
+  }
+
+  .story-detail__title {
+    font-size: 24px;
+  }
+
+  .form-container,
+  .auth-container {
+    padding: 20px;
+  }
+
+  .camera-controls {
+    flex-direction: column;
+  }
+
+  .camera-button {
+    width: 100%;
+    margin-bottom: 8px;
+  }
+
+  .notification {
+    max-width: calc(100% - 40px);
+    left: 20px;
+    right: 20px;
+  }
+
+  .user-menu {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  .user-name {
+    margin-bottom: 4px;
+  }
+
+  .logout-button {
+    width: 100%;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .hero h1 {
+    font-size: 28px;
+  }
+
+  .hero p {
+    font-size: 14px;
+  }
+
+  .hero-button {
+    padding: 10px 20px;
+    font-size: 14px;
+  }
+
+  .stories {
+    grid-template-columns: 1fr;
+  }
+
+  .auth-container {
+    padding: 16px;
+  }
+
+  .auth-icon {
+    font-size: 36px;
+  }
+
+  .auth-header h2 {
+    font-size: 20px;
+  }
+}
