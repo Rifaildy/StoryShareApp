@@ -1,12 +1,16 @@
 {
   "name": "Rifaildy's StoryShare - Share Your Stories",
   "short_name": "Rifaildy's StoryShare",
-  "description": "A platform for sharing your stories with the world",
+  "description": "Rifaildy's progressive web app for sharing your stories with the world. Create, share, and discover amazing stories from people around the globe.",
   "start_url": "/",
+  "scope": "/",
   "display": "standalone",
+  "orientation": "portrait-primary",
   "background_color": "#2962ff",
   "theme_color": "#2962ff",
-  "orientation": "portrait-primary",
+  "categories": ["social", "lifestyle", "entertainment"],
+  "lang": "en",
+  "dir": "ltr",
   "icons": [
     {
       "src": "/icons/icon-72x72.png",
@@ -57,5 +61,55 @@
       "purpose": "any maskable"
     }
   ],
-  "gcm_sender_id": "103953800507"
+  "screenshots": [
+    {
+      "src": "/screenshots/desktop-home.png",
+      "sizes": "1280x720",
+      "type": "image/png",
+      "platform": "wide",
+      "label": "Home page showing story feed"
+    },
+    {
+      "src": "/screenshots/mobile-home.png",
+      "sizes": "390x844",
+      "type": "image/png",
+      "platform": "narrow",
+      "label": "Mobile view of story feed"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Add New Story",
+      "short_name": "Add Story",
+      "description": "Quickly add a new story",
+      "url": "/#/add",
+      "icons": [
+        {
+          "src": "/icons/icon-96x96.png",
+          "sizes": "96x96"
+        }
+      ]
+    },
+    {
+      "name": "View Stories",
+      "short_name": "Stories",
+      "description": "Browse all stories",
+      "url": "/#/home",
+      "icons": [
+        {
+          "src": "/icons/icon-96x96.png",
+          "sizes": "96x96"
+        }
+      ]
+    }
+  ],
+  "related_applications": [],
+  "prefer_related_applications": false,
+  "gcm_sender_id": "103953800507",
+  "protocol_handlers": [
+    {
+      "protocol": "web+storyshare",
+      "url": "/#/story/%s"
+    }
+  ]
 }

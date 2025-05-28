@@ -37,6 +37,54 @@ body {
   color: var(--text-dark);
 }
 
+/* Application Shell Styles */
+.app-shell {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.app-shell-loaded {
+  opacity: 1;
+  transition: opacity 0.3s ease;
+}
+
+/* Content Loader */
+.content-loader {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 20px;
+  color: var(--text-light);
+}
+
+.loader-spinner {
+  font-size: 48px;
+  color: var(--primary-color);
+  margin-bottom: 20px;
+}
+
+.loader-spinner i {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Main Content */
+.main-content {
+  flex: 1;
+  position: relative;
+  overflow-x: hidden;
+}
+
 /* Skip to content link for accessibility */
 .skip-link {
   position: absolute;
@@ -127,7 +175,8 @@ body {
   transition: color var(--transition-speed);
 }
 
-.app-bar .app-bar__navigation ul li a:hover {
+.app-bar .app-bar__navigation ul li a:hover,
+.app-bar .app-bar__navigation ul li a.active {
   color: var(--primary-dark);
 }
 
@@ -135,6 +184,151 @@ body {
   margin-right: 8px;
   width: 20px;
   text-align: center;
+}
+
+/* Offline Indicator */
+.offline-indicator {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background-color: var(--error-color);
+  color: white;
+  padding: 8px 16px;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  z-index: 98;
+}
+
+/* Connection Status */
+.connection-status {
+  position: fixed;
+  bottom: 20px;
+  left: 20px;
+  padding: 12px 16px;
+  border-radius: var(--border-radius);
+  color: white;
+  font-size: 14px;
+  font-weight: 500;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  box-shadow: var(--shadow-medium);
+  animation: slideInLeft 0.3s ease;
+}
+
+.connection-status.online {
+  background-color: var(--success-color);
+}
+
+.connection-status.offline {
+  background-color: var(--error-color);
+}
+
+@keyframes slideInLeft {
+  from {
+    transform: translateX(-100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+/* Install Button */
+.install-button {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background-color: var(--primary-color);
+  color: white;
+  border: none;
+  padding: 12px 20px;
+  border-radius: 50px;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(41, 98, 255, 0.3);
+  transition: all var(--transition-speed);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.install-button:hover {
+  background-color: var(--primary-dark);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(41, 98, 255, 0.4);
+}
+
+/* Update Notification */
+.update-notification {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  background-color: var(--background-white);
+  border-radius: var(--border-radius);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  padding: 16px;
+  z-index: 1000;
+  animation: slideInRight 0.3s ease;
+}
+
+.update-content {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.update-content i {
+  color: var(--primary-color);
+  font-size: 20px;
+}
+
+.update-button {
+  background-color: var(--primary-color);
+  color: white;
+  border: none;
+  padding: 6px 12px;
+  border-radius: var(--border-radius);
+  font-size: 12px;
+  cursor: pointer;
+  transition: background-color var(--transition-speed);
+}
+
+.update-button:hover {
+  background-color: var(--primary-dark);
+}
+
+.dismiss-button {
+  background: none;
+  border: none;
+  color: var(--text-light);
+  padding: 6px 12px;
+  border-radius: var(--border-radius);
+  font-size: 12px;
+  cursor: pointer;
+  transition: color var(--transition-speed);
+}
+
+.dismiss-button:hover {
+  color: var(--text-dark);
+}
+
+@keyframes slideInRight {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
 }
 
 /* User menu */
@@ -243,24 +437,16 @@ body {
   margin-right: 8px;
 }
 
-/* Main Content */
-main {
-  padding: 0;
-  flex: 1;
-  position: relative;
-  overflow-x: hidden; /* Prevent horizontal scrolling during animations */
+/* Page Content Wrapper */
+.page-content {
+  width: 100%;
+  will-change: transform, opacity;
 }
 
 .content {
   margin: 0 auto;
   min-height: 100%;
   max-width: 1200px;
-}
-
-/* Page Content Wrapper */
-.page-content {
-  width: 100%;
-  will-change: transform, opacity;
 }
 
 .content__heading {
@@ -678,114 +864,6 @@ main {
   color: var(--primary-color);
 }
 
-/* Layer Control Styling */
-.leaflet-control-layers {
-  border-radius: var(--border-radius) !important;
-  box-shadow: var(--shadow-medium) !important;
-  border: none !important;
-  padding: 8px !important;
-  background-color: white !important;
-}
-
-.leaflet-control-layers-toggle {
-  width: 36px !important;
-  height: 36px !important;
-  background-size: 20px 20px !important;
-}
-
-.leaflet-control-layers-expanded {
-  padding: 12px !important;
-  background-color: white !important;
-  border-radius: var(--border-radius) !important;
-  min-width: 200px !important;
-}
-
-.leaflet-control-layers-selector {
-  margin-right: 8px !important;
-}
-
-.leaflet-control-layers-base label,
-.leaflet-control-layers-overlays label {
-  margin-bottom: 8px !important;
-  display: flex !important;
-  align-items: center !important;
-}
-
-.leaflet-control-layers-separator {
-  margin: 10px 0 !important;
-  border-top: 1px solid rgba(0, 0, 0, 0.1) !important;
-}
-
-/* Scale Control Styling */
-.leaflet-control-scale {
-  margin-bottom: 10px !important;
-  margin-left: 10px !important;
-}
-
-.leaflet-control-scale-line {
-  border-color: rgba(0, 0, 0, 0.4) !important;
-  color: var(--text-dark) !important;
-  background-color: rgba(255, 255, 255, 0.8) !important;
-  border-radius: 2px !important;
-  padding: 2px 5px !important;
-}
-
-/* Map Popup Styling */
-.leaflet-popup-content {
-  padding: 5px;
-}
-
-.popup-content {
-  font-family: "Poppins", sans-serif;
-}
-
-.popup-content h3 {
-  color: var(--primary-color);
-  margin-bottom: 8px;
-  font-size: 16px;
-  font-weight: 600;
-}
-
-.popup-content h4 {
-  color: var(--primary-color);
-  margin-bottom: 8px;
-  font-size: 14px;
-  font-weight: 600;
-}
-
-.popup-content img {
-  border-radius: var(--border-radius);
-  margin-bottom: 8px;
-  box-shadow: var(--shadow-light);
-}
-
-.popup-content p {
-  color: var(--text-dark);
-  margin-bottom: 8px;
-  font-size: 14px;
-  line-height: 1.4;
-}
-
-.popup-link {
-  display: inline-block;
-  padding: 6px 12px;
-  background-color: var(--primary-color);
-  color: white;
-  text-decoration: none;
-  border-radius: var(--border-radius);
-  font-size: 12px;
-  margin-top: 5px;
-  transition: background-color var(--transition-speed);
-}
-
-.popup-link:hover {
-  background-color: var(--primary-dark);
-}
-
-.popup-link i {
-  margin-right: 4px;
-}
-
 /* Authentication Pages */
 .auth-section {
   display: flex;
@@ -898,7 +976,7 @@ main {
   margin-right: 8px;
 }
 
-/* Form Footer - Fixed to remove box styling */
+/* Form Footer */
 .form-footer {
   margin-top: 24px;
   text-align: center;
@@ -1174,11 +1252,12 @@ main {
 }
 
 /* Footer */
-footer {
+.app-footer {
   background-color: var(--primary-dark);
   color: white;
-  padding: 20px 20px;
+  padding: 20px;
   text-align: center;
+  margin-top: auto;
 }
 
 .footer-content {
@@ -1258,372 +1337,6 @@ footer {
 .file-input-label i {
   color: white !important;
   margin-right: 8px;
-}
-
-/* Animation Utilities */
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-@keyframes fadeOut {
-  from {
-    opacity: 1;
-    transform: translateY(0);
-  }
-  to {
-    opacity: 0;
-    transform: translateY(-20px);
-  }
-}
-
-@keyframes slideInRight {
-  from {
-    opacity: 0;
-    transform: translateX(-100px);
-  }
-  to {
-    opacity: 1;
-    transform: translateX(0);
-  }
-}
-
-@keyframes slideInLeft {
-  from {
-    opacity: 0;
-    transform: translateX(100px);
-  }
-  to {
-    opacity: 1;
-    transform: translateX(0);
-  }
-}
-
-@keyframes zoomIn {
-  from {
-    opacity: 0;
-    transform: scale(0.95);
-  }
-  to {
-    opacity: 1;
-    transform: scale(1);
-  }
-}
-
-/* View Transitions */
-@keyframes fade-in {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
-}
-
-@keyframes fade-out {
-  from {
-    opacity: 1;
-  }
-  to {
-    opacity: 0;
-  }
-}
-
-::view-transition-old(root) {
-  animation: 300ms cubic-bezier(0.4, 0, 0.2, 1) both fade-out;
-}
-
-::view-transition-new(root) {
-  animation: 300ms cubic-bezier(0.4, 0, 0.2, 1) both fade-in;
-}
-
-/* View Transition API Styles */
-@view-transition {
-  navigation: auto;
-}
-
-/* Root transition for all pages */
-::view-transition-old(root),
-::view-transition-new(root) {
-  animation-duration: 400ms;
-  animation-timing-function: cubic-bezier(0.25, 1, 0.5, 1);
-}
-
-/* Default fade transition */
-::view-transition-old(root) {
-  animation-name: fade-out;
-}
-
-::view-transition-new(root) {
-  animation-name: fade-in;
-}
-
-/* Main content transitions */
-::view-transition-old(main-content),
-::view-transition-new(main-content) {
-  animation-duration: 500ms;
-  animation-timing-function: cubic-bezier(0.25, 1, 0.5, 1);
-}
-
-/* Detail page transition - zoom effect */
-[data-transition-type="detail"] ::view-transition-old(main-content) {
-  animation-name: zoom-out;
-}
-
-[data-transition-type="detail"] ::view-transition-new(main-content) {
-  animation-name: zoom-in;
-}
-
-/* Back to home transition - slide effect */
-[data-transition-type="back-to-home"] ::view-transition-old(main-content) {
-  animation-name: slide-out-right;
-}
-
-[data-transition-type="back-to-home"] ::view-transition-new(main-content) {
-  animation-name: slide-in-left;
-}
-
-/* Add story transition - slide up effect */
-[data-transition-type="add-story"] ::view-transition-old(main-content) {
-  animation-name: slide-out-down;
-}
-
-[data-transition-type="add-story"] ::view-transition-new(main-content) {
-  animation-name: slide-in-up;
-}
-
-/* Back from add story - slide down effect */
-[data-transition-type="back-from-add"] ::view-transition-old(main-content) {
-  animation-name: slide-out-up;
-}
-
-[data-transition-type="back-from-add"] ::view-transition-new(main-content) {
-  animation-name: slide-in-down;
-}
-
-/* Auth pages transition - fade with scale */
-[data-transition-type="auth"] ::view-transition-old(main-content) {
-  animation-name: fade-scale-out;
-}
-
-[data-transition-type="auth"] ::view-transition-new(main-content) {
-  animation-name: fade-scale-in;
-}
-
-/* From auth pages transition */
-[data-transition-type="from-auth"] ::view-transition-old(main-content) {
-  animation-name: fade-scale-out;
-}
-
-[data-transition-type="from-auth"] ::view-transition-new(main-content) {
-  animation-name: fade-scale-in;
-}
-
-/* Animation keyframes for View Transitions */
-@keyframes fade-in {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
-}
-
-@keyframes fade-out {
-  from {
-    opacity: 1;
-  }
-  to {
-    opacity: 0;
-  }
-}
-
-@keyframes zoom-in {
-  from {
-    opacity: 0;
-    transform: scale(0.9);
-  }
-  to {
-    opacity: 1;
-    transform: scale(1);
-  }
-}
-
-@keyframes zoom-out {
-  from {
-    opacity: 1;
-    transform: scale(1);
-  }
-  to {
-    opacity: 0;
-    transform: scale(1.1);
-  }
-}
-
-@keyframes slide-in-left {
-  from {
-    opacity: 0;
-    transform: translateX(-100px);
-  }
-  to {
-    opacity: 1;
-    transform: translateX(0);
-  }
-}
-
-@keyframes slide-out-right {
-  from {
-    opacity: 1;
-    transform: translateX(0);
-  }
-  to {
-    opacity: 0;
-    transform: translateX(100px);
-  }
-}
-
-@keyframes slide-in-up {
-  from {
-    opacity: 0;
-    transform: translateY(50px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-@keyframes slide-out-down {
-  from {
-    opacity: 1;
-    transform: translateY(0);
-  }
-  to {
-    opacity: 0;
-    transform: translateY(-50px);
-  }
-}
-
-@keyframes slide-in-down {
-  from {
-    opacity: 0;
-    transform: translateY(-50px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-@keyframes slide-out-up {
-  from {
-    opacity: 1;
-    transform: translateY(0);
-  }
-  to {
-    opacity: 0;
-    transform: translateY(50px);
-  }
-}
-
-@keyframes fade-scale-in {
-  from {
-    opacity: 0;
-    transform: scale(0.95);
-  }
-  to {
-    opacity: 1;
-    transform: scale(1);
-  }
-}
-
-@keyframes fade-scale-out {
-  from {
-    opacity: 1;
-    transform: scale(1);
-  }
-  to {
-    opacity: 0;
-    transform: scale(1.05);
-  }
-}
-
-/* Reduced motion preferences */
-@media (prefers-reduced-motion: reduce) {
-  ::view-transition-old(root),
-  ::view-transition-new(root),
-  ::view-transition-old(main-content),
-  ::view-transition-new(main-content) {
-    animation-duration: 0.1s;
-    animation-timing-function: ease;
-  }
-
-  /* Simplified animations for reduced motion */
-  [data-transition-type] ::view-transition-old(main-content),
-  [data-transition-type] ::view-transition-new(main-content) {
-    animation-name: fade-out, fade-in;
-  }
-}
-
-/* Loading state during transitions */
-.view-transition-loading {
-  cursor: wait;
-}
-
-/* Ensure smooth transitions for interactive elements */
-.story-item,
-.auth-button,
-.hero-button,
-.submit-button {
-  view-transition-name: none; /* Prevent individual element transitions */
-}
-
-/* Special transition for story items when navigating to detail */
-.story-item:target {
-  view-transition-name: story-detail;
-}
-
-/* Story detail specific transition */
-::view-transition-old(story-detail),
-::view-transition-new(story-detail) {
-  animation-duration: 600ms;
-  animation-timing-function: cubic-bezier(0.175, 0.885, 0.32, 1.275);
-}
-
-[data-transition-type="detail"] ::view-transition-old(story-detail) {
-  animation-name: story-zoom-out;
-}
-
-[data-transition-type="detail"] ::view-transition-new(story-detail) {
-  animation-name: story-zoom-in;
-}
-
-@keyframes story-zoom-in {
-  from {
-    opacity: 0;
-    transform: scale(0.8) translateY(20px);
-  }
-  to {
-    opacity: 1;
-    transform: scale(1) translateY(0);
-  }
-}
-
-@keyframes story-zoom-out {
-  from {
-    opacity: 1;
-    transform: scale(1) translateY(0);
-  }
-  to {
-    opacity: 0;
-    transform: scale(1.2) translateY(-20px);
-  }
 }
 
 /* Notification Settings Styles */
@@ -1809,22 +1522,48 @@ footer {
   margin-right: 8px;
 }
 
-/* Responsive design for notification settings */
-@media screen and (max-width: 767px) {
-  .notification-settings-section {
-    padding: 16px;
-  }
+/* View Transitions */
+@view-transition {
+  navigation: auto;
+}
 
-  .settings-container {
-    padding: 20px;
-  }
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation-duration: 400ms;
+  animation-timing-function: cubic-bezier(0.25, 1, 0.5, 1);
+}
 
-  .control-actions {
-    flex-direction: column;
-  }
+::view-transition-old(root) {
+  animation-name: fade-out;
+}
 
-  .notification-button {
-    width: 100%;
-    justify-content: center;
+::view-transition-new(root) {
+  animation-name: fade-in;
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes fade-out {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+/* Reduced motion preferences */
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
+    animation-duration: 0.1s;
+    animation-timing-function: ease;
   }
 }

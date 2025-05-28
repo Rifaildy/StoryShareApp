@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Rifaildy's StoryShare - OfflineMode</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: linear-gradient(135deg, #2962ff 0%, #768fff 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      text-align: center;
+      padding: 20px;
+    }
+
+    .offline-container {
+      max-width: 500px;
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+      border-radius: 20px;
+      padding: 40px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    }
+
+    .offline-icon {
+      font-size: 80px;
+      margin-bottom: 20px;
+      opacity: 0.8;
+    }
+
+    .offline-title {
+      font-size: 32px;
+      font-weight: 700;
+      margin-bottom: 16px;
+    }
+
+    .offline-message {
+      font-size: 18px;
+      margin-bottom: 30px;
+      opacity: 0.9;
+      line-height: 1.6;
+    }
+
+    .offline-actions {
+      display: flex;
+      gap: 16px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .offline-button {
+      background: rgba(255, 255, 255, 0.2);
+      border: 2px solid rgba(255, 255, 255, 0.3);
+      color: white;
+      padding: 12px 24px;
+      border-radius: 50px;
+      text-decoration: none;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .offline-button:hover {
+      background: rgba(255, 255, 255, 0.3);
+      border-color: rgba(255, 255, 255, 0.5);
+      transform: translateY(-2px);
+    }
+
+    .retry-button {
+      background: rgba(255, 255, 255, 0.9);
+      color: #2962ff;
+    }
+
+    .retry-button:hover {
+      background: white;
+      color: #0039cb;
+    }
+
+    .features-list {
+      margin-top: 30px;
+      text-align: left;
+    }
+
+    .features-list h3 {
+      margin-bottom: 16px;
+      font-size: 20px;
+    }
+
+    .features-list ul {
+      list-style: none;
+    }
+
+    .features-list li {
+      padding: 8px 0;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      opacity: 0.9;
+    }
+
+    .features-list li i {
+      color: #ff6d00;
+      width: 20px;
+    }
+
+    @media (max-width: 480px) {
+      .offline-container {
+        padding: 30px 20px;
+      }
+
+      .offline-title {
+        font-size: 24px;
+      }
+
+      .offline-message {
+        font-size: 16px;
+      }
+
+      .offline-actions {
+        flex-direction: column;
+      }
+    }
+
+    /* Animation */
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .offline-container {
+      animation: fadeInUp 0.6s ease-out;
+    }
+
+    .offline-icon {
+      animation: fadeInUp 0.6s ease-out 0.2s both;
+    }
+
+    .offline-title {
+      animation: fadeInUp 0.6s ease-out 0.4s both;
+    }
+
+    .offline-message {
+      animation: fadeInUp 0.6s ease-out 0.6s both;
+    }
+
+    .offline-actions {
+      animation: fadeInUp 0.6s ease-out 0.8s both;
+    }
+  </style>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+  <div class="offline-container">
+    <div class="offline-icon">
+      <i class="fa-solid fa-wifi-slash"></i>
+    </div>
+    
+    <h1 class="offline-title">You're Offline</h1>
+    
+    <p class="offline-message">
+      It looks like you've lost your internet connection. Don't worry, you can still browse previously loaded content!
+    </p>
+
+    <div class="offline-actions">
+      <button class="offline-button retry-button" onclick="window.location.reload()">
+        <i class="fa-solid fa-refresh"></i>
+        Try Again
+      </button>
+      <a href="#/home" class="offline-button">
+        <i class="fa-solid fa-home"></i>
+        Go Home
+      </a>
+    </div>
+
+    <div class="features-list">
+      <h3><i class="fa-solid fa-star"></i> Available Offline:</h3>
+      <ul>
+        <li>
+          <i class="fa-solid fa-book"></i>
+          <span>Browse previously loaded stories</span>
+        </li>
+        <li>
+          <i class="fa-solid fa-map"></i>
+          <span>View story locations on map</span>
+        </li>
+        <li>
+          <i class="fa-solid fa-plus"></i>
+          <span>Create new stories (will sync when online)</span>
+        </li>
+        <li>
+          <i class="fa-solid fa-cog"></i>
+          <span>Access app settings</span>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <script>
+    window.addEventListener('online', () => {
+      window.location.reload()
+    })
+
+    if (window.location.hash) {
+      const homeLink = document.querySelector('a[href="#/home"]')
+      if (homeLink) {
+        homeLink.href = window.location.origin + window.location.hash
+      }
+    }
+  </script>
+</body>
+</html>
