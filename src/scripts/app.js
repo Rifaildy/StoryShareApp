@@ -24,9 +24,15 @@ class App {
   }
 
   async renderPage() {
-    const url = UrlParser.parseActiveUrlWithCombiner();
+    let url = UrlParser.parseActiveUrlWithCombiner();
     const previousUrl = this._previousUrl || url;
     this._previousUrl = url;
+
+    if (!UrlParser.isValidRoute(routes, url)) {
+      console.log("Route not found:", url, "Redirecting to 404");
+      url = UrlParser.getNotFoundRoute();
+      window.history.replaceState(null, null, "#/404");
+    }
 
     if (this._cleanupFunction) {
       this._cleanupFunction();
@@ -34,6 +40,11 @@ class App {
     }
 
     const page = routes[url];
+
+    if (!page) {
+      console.error("Page not found for URL:", url);
+      return;
+    }
 
     try {
       if (document.startViewTransition) {
@@ -43,18 +54,21 @@ class App {
       }
 
       const skipLinkElem = document.querySelector(".skip-link");
-      skipLinkElem.addEventListener("click", (e) => {
-        e.preventDefault();
-        document.querySelector("#mainContent").focus();
-      });
+      if (skipLinkElem) {
+        skipLinkElem.addEventListener("click", (e) => {
+          e.preventDefault();
+          document.querySelector("#mainContent").focus();
+        });
+      }
     } catch (error) {
       console.error("Error rendering page:", error);
       this._content.innerHTML = `
-      <div class="error">
-        <i class="fa-solid fa-triangle-exclamation"></i>
-        <p>Error loading page: ${error.message}</p>
-      </div>
-    `;
+        <div class="error">
+          <i class="fa-solid fa-triangle-exclamation"></i>
+          <p>Error loading page: ${error.message}</p>
+          <a href="#/home" class="button">Go Home</a>
+        </div>
+      `;
     }
   }
 
@@ -86,7 +100,7 @@ class App {
   async _renderWithFallbackAnimation(page, previousUrl, url) {
     const contentWrapper = document.createElement("div");
     contentWrapper.className = "page-content";
-    contentWrapper.style.opacity = "0"; 
+    contentWrapper.style.opacity = "0";
     contentWrapper.innerHTML = await page.render();
 
     const animationType = AnimationHelper.determineAnimationType(
@@ -132,6 +146,8 @@ class App {
       return "auth";
     } else if (fromRoute === "/login" || fromRoute === "/register") {
       return "from-auth";
+    } else if (toRoute === "/404") {
+      return "not-found";
     }
     return "default";
   }

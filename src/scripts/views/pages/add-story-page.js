@@ -115,14 +115,21 @@ class AddStoryPage {
     this._map.on("click", (e) => {
       const { lat, lng } = e.latlng;
 
-      document.getElementById("latitude").value = lat;
-      document.getElementById("longitude").value = lng;
+      const latitudeInput = document.getElementById("latitude");
+      const longitudeInput = document.getElementById("longitude");
+      const selectedLocationElement =
+        document.getElementById("selectedLocation");
 
-      document.getElementById("selectedLocation").innerHTML = `
-        <i class="fa-solid fa-map-pin"></i> Your location: ${lat.toFixed(
-          6
-        )}, ${lng.toFixed(6)}
-      `;
+      if (latitudeInput && longitudeInput && selectedLocationElement) {
+        latitudeInput.value = lat;
+        longitudeInput.value = lng;
+
+        selectedLocationElement.innerHTML = `
+          <i class="fa-solid fa-map-pin"></i> Your location: ${lat.toFixed(
+            6
+          )}, ${lng.toFixed(6)}
+        `;
+      }
 
       if (this._marker) {
         this._marker.setLatLng([lat, lng]);
@@ -173,8 +180,15 @@ class AddStoryPage {
             }).addTo(this._map);
           }
 
-          document.getElementById("latitude").value = latitude;
-          document.getElementById("longitude").value = longitude;
+          const latitudeInput = document.getElementById("latitude");
+          const longitudeInput = document.getElementById("longitude");
+
+          if (latitudeInput && longitudeInput) {
+            latitudeInput.value = latitude;
+            longitudeInput.value = longitude;
+          } else {
+            console.warn("Latitude or longitude input elements not found");
+          }
 
           document.getElementById("selectedLocation").innerHTML = `
             <i class="fa-solid fa-map-pin"></i> Your location: ${latitude.toFixed(
@@ -342,9 +356,12 @@ class AddStoryPage {
   }
 
   getFormData() {
-    const description = document.getElementById("description").value;
-    const latitude = document.getElementById("latitude").value;
-    const longitude = document.getElementById("longitude").value;
+    const description = document.getElementById("description")?.value || "";
+    const latitudeInput = document.getElementById("latitude");
+    const longitudeInput = document.getElementById("longitude");
+
+    const latitude = latitudeInput?.value || "";
+    const longitude = longitudeInput?.value || "";
 
     const formData = new FormData();
     formData.append("description", description);
@@ -353,7 +370,7 @@ class AddStoryPage {
       formData.append("photo", this._selectedFile);
     } else {
       const photoCanvas = document.getElementById("photoCanvas");
-      if (photoCanvas.width > 0) {
+      if (photoCanvas && photoCanvas.width > 0) {
         const photoDataUrl = photoCanvas.toDataURL("image/jpeg");
         const photoBlob = this._dataURLtoBlob(photoDataUrl);
         formData.append("photo", photoBlob, "photo.jpg");

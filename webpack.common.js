@@ -1,6 +1,6 @@
-const path = require("path")
-const HtmlWebpackPlugin = require("html-webpack-plugin")
-const CopyWebpackPlugin = require("copy-webpack-plugin")
+const path = require("path");
+const HtmlWebpackPlugin = require("html-webpack-plugin");
+const CopyWebpackPlugin = require("copy-webpack-plugin");
 
 module.exports = {
   entry: {
@@ -10,6 +10,23 @@ module.exports = {
     filename: "[name].bundle.js",
     path: path.resolve(__dirname, "dist"),
     clean: true,
+  },
+  optimization: {
+    splitChunks: {
+      chunks: "all",
+      cacheGroups: {
+        vendor: {
+          test: /[\\/]node_modules[\\/]/,
+          name: "vendors",
+          chunks: "all",
+        },
+        leaflet: {
+          test: /[\\/]node_modules[\\/]leaflet[\\/]/,
+          name: "leaflet",
+          chunks: "all",
+        },
+      },
+    },
   },
   module: {
     rules: [
@@ -52,4 +69,4 @@ module.exports = {
       ],
     }),
   ],
-}
+};

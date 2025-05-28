@@ -3,6 +3,7 @@ import DetailPage from "../views/pages/detail-page";
 import AddStoryPage from "../views/pages/add-story-page";
 import LoginPage from "../views/pages/login-page";
 import RegisterPage from "../views/pages/register-page";
+import NotFoundPage from "../views/pages/not-found-page";
 import HomePresenter from "../presenters/home-presenter";
 import DetailPresenter from "../presenters/detail-presenter";
 import AddStoryPresenter from "../presenters/add-story-presenter";
@@ -140,6 +141,16 @@ const routes = {
   },
   "/favorites": {
     view: new FavoritesPage(),
+    presenter: null,
+    render: function () {
+      return this.view.getTemplate();
+    },
+    afterRender: async function () {
+      await this.view.afterRender();
+    },
+  },
+  "/404": {
+    view: new NotFoundPage(),
     presenter: null,
     render: function () {
       return this.view.getTemplate();

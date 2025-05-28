@@ -67,38 +67,67 @@
       "sizes": "1280x720",
       "type": "image/png",
       "platform": "wide",
-      "label": "Home page showing story feed"
+      "label": "Desktop view showing story feed and map with navigation"
+    },
+    {
+      "src": "/screenshots/desktop-add-story.png",
+      "sizes": "1280x720",
+      "type": "image/png",
+      "platform": "wide",
+      "label": "Desktop add story page with camera and location features"
     },
     {
       "src": "/screenshots/mobile-home.png",
       "sizes": "390x844",
       "type": "image/png",
       "platform": "narrow",
-      "label": "Mobile view of story feed"
+      "label": "Mobile view of story feed with responsive design"
+    },
+    {
+      "src": "/screenshots/mobile-add-story.png",
+      "sizes": "390x844",
+      "type": "image/png",
+      "platform": "narrow",
+      "label": "Mobile add story interface with camera access"
     }
   ],
   "shortcuts": [
     {
       "name": "Add New Story",
       "short_name": "Add Story",
-      "description": "Quickly add a new story",
+      "description": "Quickly add a new story with photo and location",
       "url": "/#/add",
       "icons": [
         {
           "src": "/icons/icon-96x96.png",
-          "sizes": "96x96"
+          "sizes": "96x96",
+          "type": "image/png"
         }
       ]
     },
     {
-      "name": "View Stories",
-      "short_name": "Stories",
-      "description": "Browse all stories",
-      "url": "/#/home",
+      "name": "View Favorites",
+      "short_name": "Favorites",
+      "description": "Browse your favorite stories",
+      "url": "/#/favorites",
       "icons": [
         {
           "src": "/icons/icon-96x96.png",
-          "sizes": "96x96"
+          "sizes": "96x96",
+          "type": "image/png"
+        }
+      ]
+    },
+    {
+      "name": "Notification Settings",
+      "short_name": "Notifications",
+      "description": "Manage push notification preferences",
+      "url": "/#/notifications",
+      "icons": [
+        {
+          "src": "/icons/icon-96x96.png",
+          "sizes": "96x96",
+          "type": "image/png"
         }
       ]
     }
