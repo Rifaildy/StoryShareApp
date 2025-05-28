@@ -2,12 +2,14 @@ import { createStoryItemTemplate } from "../templates/template-creator";
 import MapStyles from "../../utils/map-styles";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
+import IDBHelper from "../../utils/idb-helper";
 
 class HomePage {
   constructor() {
     this._stories = [];
     this._map = null;
     this._markers = [];
+    this._idbHelper = new IDBHelper();
   }
 
   getTemplate() {
@@ -37,15 +39,24 @@ class HomePage {
     `;
   }
 
-  showStories(stories) {
+  async showStories(stories) {
     this._stories = stories;
     const storiesContainer = document.querySelector("#stories");
 
     if (stories.length > 0) {
       storiesContainer.innerHTML = "";
-      stories.forEach((story) => {
-        storiesContainer.innerHTML += createStoryItemTemplate(story);
-      });
+
+      // Check which stories are favorites
+      for (const story of stories) {
+        const isFavorite = await this._idbHelper.isFavorite(story.id);
+        storiesContainer.innerHTML += createStoryItemTemplate(
+          story,
+          isFavorite
+        );
+      }
+
+      // Add event listeners to favorite buttons
+      this.initFavoriteButtons();
     } else {
       storiesContainer.innerHTML = `
         <div class="empty-state">
@@ -55,6 +66,63 @@ class HomePage {
         </div>
       `;
     }
+  }
+
+  initFavoriteButtons() {
+    const favoriteButtons = document.querySelectorAll(".favorite-button");
+    favoriteButtons.forEach((button) => {
+      button.addEventListener("click", async (event) => {
+        event.preventDefault();
+        const storyId = button.dataset.id;
+        const isActive = button.classList.contains("active");
+
+        try {
+          if (isActive) {
+            await this._idbHelper.removeFromFavorites(storyId);
+            button.classList.remove("active");
+            button.innerHTML = '<i class="fa-regular fa-heart"></i>';
+            this.showNotification("Removed from favorites", "success");
+          } else {
+            const story = this._stories.find((s) => s.id === storyId);
+            if (story) {
+              await this._idbHelper.addToFavorites(story);
+              button.classList.add("active");
+              button.innerHTML = '<i class="fa-solid fa-heart"></i>';
+              this.showNotification("Added to favorites", "success");
+            }
+          }
+        } catch (error) {
+          console.error("Error updating favorites:", error);
+          this.showNotification("Failed to update favorites", "error");
+        }
+      });
+    });
+  }
+
+  showNotification(message, type) {
+    const notification = document.createElement("div");
+    notification.className = `notification ${type}`;
+    notification.innerHTML = `
+      <i class="fa-solid ${
+        type === "success" ? "fa-check-circle" : "fa-exclamation-circle"
+      }"></i>
+      <p>${message}</p>
+    `;
+
+    document.body.appendChild(notification);
+
+    setTimeout(() => {
+      notification.classList.add("show");
+    }, 10);
+
+    setTimeout(() => {
+      notification.classList.remove("show");
+      setTimeout(() => {
+        if (document.body.contains(notification)) {
+          document.body.removeChild(notification);
+        }
+      }, 300);
+    }, 3000);
   }
 
   showError(message) {
@@ -67,15 +135,18 @@ class HomePage {
   }
 
   initMap(stories) {
+    // Filter stories with location data
     const storiesWithLocation = stories.filter(
       (story) => story.lat && story.lon
     );
 
     if (storiesWithLocation.length > 0) {
+      // Initialize map with multiple styles and layer control
       const { map } = MapStyles.initMap(L, "map", [-2.548926, 118.0148634], 5);
 
       this._map = map;
 
+      // Custom marker icon
       const customIcon = L.icon({
         iconUrl:
           "https://cdn.rawgit.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-blue.png",
@@ -87,11 +158,14 @@ class HomePage {
         shadowSize: [41, 41],
       });
 
+      // Create a marker cluster group
       const markers = L.layerGroup();
 
+      // Add markers for each story with location
       storiesWithLocation.forEach((story) => {
         const marker = L.marker([story.lat, story.lon], { icon: customIcon });
 
+        // Add popup with story info
         marker.bindPopup(`
           <div class="popup-content">
             <h3>${story.name}</h3>
@@ -105,19 +179,23 @@ class HomePage {
           </div>
         `);
 
+        // Add marker to layer group
         markers.addTo(this._map);
         this._markers.push(marker);
         marker.addTo(markers);
       });
 
+      // Add markers as an overlay
       const overlays = {
         "Story Locations": markers,
       };
 
+      // Add overlay to layer control
       L.control
         .layers(MapStyles.getTileLayers(L), overlays, { position: "topright" })
         .addTo(this._map);
 
+      // Add scale control
       L.control.scale().addTo(this._map);
     } else {
       document.querySelector("#map").innerHTML = `
@@ -133,7 +211,6 @@ class HomePage {
     window.location.hash = "#/login";
   }
 
-
   showLoading() {
     const storiesContainer = document.querySelector("#stories");
     storiesContainer.innerHTML = `
@@ -144,12 +221,12 @@ class HomePage {
     `;
   }
 
-  displayStories(stories) {
-    this.showStories(stories); 
+  async displayStories(stories) {
+    await this.showStories(stories);
   }
 
   displayStoriesOnMap(stories) {
-    this.initMap(stories); 
+    this.initMap(stories);
   }
 
   handleUnauthenticated() {

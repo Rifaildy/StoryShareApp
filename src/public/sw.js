@@ -1,4 +1,8 @@
-import CONFIG from "../scripts/globals/config.js";
+const CONFIG = {
+  BASE_URL: "https://story-api.dicoding.dev/v1",
+  DEFAULT_LANGUAGE: "en-us",
+  CACHE_NAME: "StoryApp-V1",
+};
 
 const CACHE_NAME = CONFIG.CACHE_NAME;
 const STATIC_CACHE = `${CACHE_NAME}-static`;

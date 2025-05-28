@@ -2,11 +2,13 @@ import { createStoryDetailTemplate } from "../templates/template-creator";
 import MapStyles from "../../utils/map-styles";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
+import IDBHelper from "../../utils/idb-helper";
 
 class DetailPage {
   constructor() {
     this._story = null;
     this._map = null;
+    this._idbHelper = new IDBHelper();
   }
 
   getTemplate() {
@@ -27,10 +29,72 @@ class DetailPage {
     `;
   }
 
-  showStory(story) {
+  async showStory(story) {
     this._story = story;
     const storyContainer = document.querySelector("#story");
-    storyContainer.innerHTML = createStoryDetailTemplate(story);
+
+    // Check if story is in favorites
+    const isFavorite = await this._idbHelper.isFavorite(story.id);
+
+    storyContainer.innerHTML = createStoryDetailTemplate(story, isFavorite);
+
+    // Add event listener to favorite button
+    this.initFavoriteButton();
+  }
+
+  initFavoriteButton() {
+    const favoriteButton = document.querySelector(".detail-favorite");
+    if (favoriteButton) {
+      favoriteButton.addEventListener("click", async () => {
+        const storyId = favoriteButton.dataset.id;
+        const isActive = favoriteButton.classList.contains("active");
+
+        try {
+          if (isActive) {
+            await this._idbHelper.removeFromFavorites(storyId);
+            favoriteButton.classList.remove("active");
+            favoriteButton.innerHTML =
+              '<i class="fa-regular fa-heart"></i> Add to Favorites';
+            this.showNotification("Removed from favorites", "success");
+          } else {
+            await this._idbHelper.addToFavorites(this._story);
+            favoriteButton.classList.add("active");
+            favoriteButton.innerHTML =
+              '<i class="fa-solid fa-heart"></i> Remove from Favorites';
+            this.showNotification("Added to favorites", "success");
+          }
+        } catch (error) {
+          console.error("Error updating favorites:", error);
+          this.showNotification("Failed to update favorites", "error");
+        }
+      });
+    }
+  }
+
+  showNotification(message, type) {
+    const notification = document.createElement("div");
+    notification.className = `notification ${type}`;
+    notification.innerHTML = `
+      <i class="fa-solid ${
+        type === "success" ? "fa-check-circle" : "fa-exclamation-circle"
+      }"></i>
+      <p>${message}</p>
+    `;
+
+    document.body.appendChild(notification);
+
+    setTimeout(() => {
+      notification.classList.add("show");
+    }, 10);
+
+    setTimeout(() => {
+      notification.classList.remove("show");
+      setTimeout(() => {
+        if (document.body.contains(notification)) {
+          document.body.removeChild(notification);
+        }
+      }, 300);
+    }, 3000);
   }
 
   showLoading() {
@@ -67,6 +131,7 @@ class DetailPage {
       `;
     }
 
+    // Hide map container
     document.querySelector("#detailMapSection").style.display = "none";
   }
 
@@ -74,6 +139,7 @@ class DetailPage {
     if (story.lat && story.lon) {
       document.querySelector("#detailMapSection").style.display = "block";
 
+      // Initialize map with multiple styles and layer control
       const { map } = MapStyles.initMap(
         L,
         "detailMap",
@@ -83,6 +149,7 @@ class DetailPage {
 
       this._map = map;
 
+      // Custom marker icon
       const customIcon = L.icon({
         iconUrl:
           "https://cdn.rawgit.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png",
@@ -94,10 +161,12 @@ class DetailPage {
         shadowSize: [41, 41],
       });
 
+      // Add marker for story location
       const marker = L.marker([story.lat, story.lon], {
         icon: customIcon,
       }).addTo(this._map);
 
+      // Add popup with story info
       marker
         .bindPopup(
           `
@@ -111,6 +180,7 @@ class DetailPage {
         )
         .openPopup();
 
+      // Add scale control
       L.control.scale().addTo(this._map);
     } else {
       document.querySelector("#detailMapSection").innerHTML = `
@@ -128,12 +198,12 @@ class DetailPage {
     window.location.hash = "#/login";
   }
 
-  displayStory(story) {
-    this.showStory(story); 
+  async displayStory(story) {
+    await this.showStory(story);
   }
 
   displayStoryLocation(story) {
-    this.initMap(story); 
+    this.initMap(story);
   }
 
   handleUnauthenticated() {
