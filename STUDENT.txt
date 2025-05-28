@@ -1,2 +1,3 @@
 Notes:
 - This project uses Leaflet for maps, which doesn't require an API key.
+- Github Pages: https://rifaildy.github.io/StoryShareApp/ 
