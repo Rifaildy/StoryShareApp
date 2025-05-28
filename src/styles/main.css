@@ -309,7 +309,8 @@ main {
 .add-story-section,
 .detail-map-section,
 .form-section {
-  padding: 30px;
+  margin-bottom: 32px;
+  padding: 32px;
 }
 
 /* Map Controls */
@@ -1176,7 +1177,7 @@ main {
 footer {
   background-color: var(--primary-dark);
   color: white;
-  padding: 20px 20px 0px;
+  padding: 20px 20px;
   text-align: center;
 }
 
@@ -1622,5 +1623,208 @@ footer {
   to {
     opacity: 0;
     transform: scale(1.2) translateY(-20px);
+  }
+}
+
+/* Notification Settings Styles */
+.notification-settings-section {
+  padding: 32px;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.settings-container {
+  background-color: var(--background-white);
+  border-radius: var(--border-radius);
+  box-shadow: var(--shadow-medium);
+  padding: 32px;
+}
+
+.control-group {
+  margin-bottom: 32px;
+  padding-bottom: 24px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.control-group:last-child {
+  border-bottom: none;
+  margin-bottom: 0;
+}
+
+.control-heading {
+  font-size: 20px;
+  color: var(--primary-color);
+  margin-bottom: 8px;
+  font-weight: 600;
+}
+
+.control-heading i {
+  margin-right: 8px;
+}
+
+.control-description {
+  color: var(--text-light);
+  margin-bottom: 16px;
+  line-height: 1.5;
+}
+
+.control-actions {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.notification-button {
+  padding: 10px 20px;
+  border-radius: var(--border-radius);
+  border: none;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all var(--transition-speed);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.notification-button i {
+  margin-right: 8px;
+}
+
+.notification-button:not(.secondary):not(.danger) {
+  background-color: var(--primary-color);
+  color: white;
+}
+
+.notification-button:not(.secondary):not(.danger):hover {
+  background-color: var(--primary-dark);
+}
+
+.notification-button.secondary {
+  background-color: var(--secondary-color);
+  color: white;
+}
+
+.notification-button.secondary:hover {
+  background-color: var(--secondary-dark);
+}
+
+.notification-button.danger {
+  background-color: var(--error-color);
+  color: white;
+}
+
+.notification-button.danger:hover {
+  background-color: #b71c1c;
+}
+
+.notification-button:disabled {
+  background-color: #bdbdbd;
+  cursor: not-allowed;
+}
+
+.info-content ul {
+  list-style: none;
+  padding: 0;
+  margin: 16px 0;
+}
+
+.info-content ul li {
+  padding: 8px 0;
+  color: var(--text-dark);
+  display: flex;
+  align-items: center;
+}
+
+.info-content ul li i {
+  color: var(--primary-color);
+  margin-right: 12px;
+  width: 20px;
+  text-align: center;
+}
+
+.browser-support {
+  margin-top: 24px;
+  padding: 16px;
+  background-color: rgba(41, 98, 255, 0.05);
+  border-radius: var(--border-radius);
+  border-left: 4px solid var(--primary-color);
+}
+
+.browser-support h4 {
+  color: var(--primary-color);
+  margin-bottom: 8px;
+  font-weight: 600;
+}
+
+.browser-support h4 i {
+  margin-right: 8px;
+}
+
+.support-status {
+  display: flex;
+  align-items: center;
+  font-weight: 500;
+}
+
+.support-status i {
+  margin-right: 8px;
+}
+
+.support-granted {
+  color: var(--success-color);
+}
+
+.support-denied {
+  color: var(--error-color);
+}
+
+.support-default {
+  color: var(--secondary-color);
+}
+
+.support-unsupported {
+  color: var(--text-light);
+}
+
+.back-navigation {
+  margin-top: 32px;
+  padding-top: 24px;
+  border-top: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.back-link {
+  color: var(--primary-color);
+  text-decoration: none;
+  font-weight: 500;
+  transition: color var(--transition-speed);
+  display: inline-flex;
+  align-items: center;
+}
+
+.back-link:hover {
+  color: var(--primary-dark);
+}
+
+.back-link i {
+  margin-right: 8px;
+}
+
+/* Responsive design for notification settings */
+@media screen and (max-width: 767px) {
+  .notification-settings-section {
+    padding: 16px;
+  }
+
+  .settings-container {
+    padding: 20px;
+  }
+
+  .control-actions {
+    flex-direction: column;
+  }
+
+  .notification-button {
+    width: 100%;
+    justify-content: center;
   }
 }

@@ -4,8 +4,10 @@ import "./styles/responsive.css";
 import App from "./scripts/app";
 import swRegister from "./scripts/utils/sw-register";
 import AuthRepository from "./scripts/data/auth-repository";
+import NotificationHelper from "./scripts/utils/notification-helper";
 
 const authRepository = new AuthRepository();
+const notificationHelper = new NotificationHelper();
 
 const app = new App({
   button: document.querySelector("#hamburgerButton"),
@@ -37,6 +39,15 @@ window.addEventListener("load", async () => {
   }
 
   await swRegister();
+
+  if (authRepository.isLoggedIn()) {
+    try {
+      await notificationHelper.init();
+      console.log("Notification helper initialized");
+    } catch (error) {
+      console.error("Error initializing notifications:", error);
+    }
+  }
 });
 
 const updateAuthMenu = () => {

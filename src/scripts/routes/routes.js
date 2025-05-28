@@ -10,6 +10,7 @@ import LoginPresenter from "../presenters/login-presenter";
 import RegisterPresenter from "../presenters/register-presenter";
 import StoryRepository from "../data/story-repository";
 import AuthRepository from "../data/auth-repository";
+import NotificationSettingsPage from "../views/pages/notification-settings-page";
 
 const storyRepository = new StoryRepository();
 const authRepository = new AuthRepository();
@@ -124,6 +125,16 @@ const routes = {
       return () => {
         presenter.destroy();
       };
+    },
+  },
+  "/notifications": {
+    view: new NotificationSettingsPage(),
+    presenter: null, // No presenter needed for settings page
+    render: function () {
+      return this.view.getTemplate();
+    },
+    afterRender: async function () {
+      await this.view.afterRender();
     },
   },
 };
