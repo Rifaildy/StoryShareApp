@@ -5,13 +5,10 @@
 class NotificationHelper {
   constructor() {
     this.vapidPublicKey =
-      "BN7-r0Svv7CsTi18-OPYtJLVW0bfuZ1x1UtrygczKjNzap6l4UVVsGTF1rqaYhQCLGpAJKSZXfciBe_EsqYH8eE"; // VAPID public key from Dicoding API
+      "BCCs2eonMI-6H2ctvFaWg-UYdDv387Vno_bzUzALpB442r2lCnsHmtrx8biyPi_E-1fSGABK_Qs_GlvPoJJqxbk";
     this.subscription = null;
   }
 
-  /**
-   * Check if notifications are supported
-   */
   isSupported() {
     return (
       "Notification" in window &&
@@ -20,9 +17,6 @@ class NotificationHelper {
     );
   }
 
-  /**
-   * Get current notification permission status
-   */
   getPermissionStatus() {
     if (!this.isSupported()) {
       return "unsupported";
@@ -30,9 +24,6 @@ class NotificationHelper {
     return Notification.permission;
   }
 
-  /**
-   * Request notification permission from user
-   */
   async requestPermission() {
     if (!this.isSupported()) {
       throw new Error("Notifications are not supported in this browser");
@@ -55,9 +46,6 @@ class NotificationHelper {
     return permission;
   }
 
-  /**
-   * Subscribe to push notifications
-   */
   async subscribeToPush() {
     try {
       await this.requestPermission();
@@ -84,9 +72,6 @@ class NotificationHelper {
     }
   }
 
-  /**
-   * Unsubscribe from push notifications
-   */
   async unsubscribeFromPush() {
     try {
       const registration = await navigator.serviceWorker.ready;
@@ -106,9 +91,6 @@ class NotificationHelper {
     }
   }
 
-  /**
-   * Check if user is currently subscribed
-   */
   async isSubscribed() {
     try {
       const registration = await navigator.serviceWorker.ready;
@@ -120,9 +102,6 @@ class NotificationHelper {
     }
   }
 
-  /**
-   * Get current subscription
-   */
   async getSubscription() {
     try {
       const registration = await navigator.serviceWorker.ready;
@@ -133,9 +112,6 @@ class NotificationHelper {
     }
   }
 
-  /**
-   * Send subscription to server
-   */
   async sendSubscriptionToServer(subscription) {
     try {
       const token = localStorage.getItem("token");
@@ -143,8 +119,10 @@ class NotificationHelper {
         throw new Error("User not authenticated");
       }
 
+      const subscriptionJson = subscription.toJSON();
+
       const response = await fetch(
-        "https://story-api.dicoding.dev/v1/push/subscribe",
+        "https://story-api.dicoding.dev/v1/notifications/subscribe",
         {
           method: "POST",
           headers: {
@@ -152,7 +130,11 @@ class NotificationHelper {
             Authorization: `Bearer ${token}`,
           },
           body: JSON.stringify({
-            subscription: subscription.toJSON(),
+            endpoint: subscriptionJson.endpoint,
+            keys: {
+              p256dh: subscriptionJson.keys.p256dh,
+              auth: subscriptionJson.keys.auth,
+            },
           }),
         }
       );
@@ -170,9 +152,6 @@ class NotificationHelper {
     }
   }
 
-  /**
-   * Remove subscription from server
-   */
   async removeSubscriptionFromServer(subscription) {
     try {
       const token = localStorage.getItem("token");
@@ -181,15 +160,15 @@ class NotificationHelper {
       }
 
       const response = await fetch(
-        "https://story-api.dicoding.dev/v1/push/unsubscribe",
+        "https://story-api.dicoding.dev/v1/notifications/subscribe",
         {
-          method: "POST",
+          method: "DELETE",
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
           },
           body: JSON.stringify({
-            subscription: subscription.toJSON(),
+            endpoint: subscription.endpoint,
           }),
         }
       );
@@ -207,9 +186,6 @@ class NotificationHelper {
     }
   }
 
-  /**
-   * Show a local notification (for testing)
-   */
   async showLocalNotification(title, options = {}) {
     try {
       await this.requestPermission();
@@ -236,9 +212,6 @@ class NotificationHelper {
     }
   }
 
-  /**
-   * Convert VAPID key to Uint8Array
-   */
   urlBase64ToUint8Array(base64String) {
     const padding = "=".repeat((4 - (base64String.length % 4)) % 4);
     const base64 = (base64String + padding)
@@ -254,9 +227,6 @@ class NotificationHelper {
     return outputArray;
   }
 
-  /**
-   * Initialize notification helper
-   */
   async init() {
     if (!this.isSupported()) {
       console.warn("Push notifications are not supported in this browser");
