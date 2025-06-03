@@ -121,9 +121,7 @@ class NotificationHelper {
 
       const subscriptionJson = subscription.toJSON();
 
-      const response = await fetch(
-        "https://story-api.dicoding.dev/v1/notifications/subscribe",
-        {
+      const response = await fetch("https://story-api.dicoding.dev/v1/push/subscribe",{
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -159,9 +157,7 @@ class NotificationHelper {
         throw new Error("User not authenticated");
       }
 
-      const response = await fetch(
-        "https://story-api.dicoding.dev/v1/notifications/subscribe",
-        {
+      const response = await fetch("https://story-api.dicoding.dev/v1/push/subscribe", {
           method: "DELETE",
           headers: {
             "Content-Type": "application/json",
