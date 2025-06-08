@@ -1,7 +1,3 @@
-/**
- * Notification Helper
- * Handles push notification subscription and management
- */
 class NotificationHelper {
   constructor() {
     this.vapidPublicKey =
@@ -121,7 +117,9 @@ class NotificationHelper {
 
       const subscriptionJson = subscription.toJSON();
 
-      const response = await fetch("https://story-api.dicoding.dev/v1/push/subscribe",{
+      const response = await fetch(
+        "https://story-api.dicoding.dev/v1/notifications/subscribe",
+        {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -138,7 +136,10 @@ class NotificationHelper {
       );
 
       if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
+        const errorText = await response.text();
+        throw new Error(
+          `HTTP error! status: ${response.status}, message: ${errorText}`
+        );
       }
 
       const result = await response.json();
@@ -157,7 +158,9 @@ class NotificationHelper {
         throw new Error("User not authenticated");
       }
 
-      const response = await fetch("https://story-api.dicoding.dev/v1/push/subscribe", {
+      const response = await fetch(
+        "https://story-api.dicoding.dev/v1/notifications/subscribe",
+        {
           method: "DELETE",
           headers: {
             "Content-Type": "application/json",
@@ -170,7 +173,10 @@ class NotificationHelper {
       );
 
       if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
+        const errorText = await response.text();
+        throw new Error(
+          `HTTP error! status: ${response.status}, message: ${errorText}`
+        );
       }
 
       const result = await response.json();
