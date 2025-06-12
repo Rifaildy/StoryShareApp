@@ -6,9 +6,13 @@ module.exports = merge(common, {
   mode: "development",
   devtool: "inline-source-map",
   devServer: {
-    static: path.resolve(__dirname, "dist"),
+    static: {
+      directory: path.resolve(__dirname, "dist"),
+    },
     open: true,
     port: 9000,
+    hot: true,
+    liveReload: true,
     client: {
       overlay: {
         errors: true,
@@ -16,6 +20,8 @@ module.exports = merge(common, {
       },
     },
     compress: true,
+    historyApiFallback: true,
+    watchFiles: ["src/**/*"],
   },
   stats: {
     warnings: false,

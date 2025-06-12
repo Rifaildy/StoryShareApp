@@ -8,13 +8,16 @@ import NotificationHelper from "./scripts/utils/notification-helper";
 import AppShell from "./scripts/views/components/app-shell";
 import OfflineManager from "./scripts/utils/offline-manager";
 
+// Initialize app shell first
 const appShell = new AppShell();
 const authRepository = new AuthRepository();
 const notificationHelper = new NotificationHelper();
 const offlineManager = new OfflineManager();
 
+// Initialize app shell
 appShell.init();
 
+// Initialize main app
 const app = new App({
   button: document.querySelector("#hamburgerButton"),
   drawer: document.querySelector("#navigationDrawer"),
@@ -23,6 +26,7 @@ const app = new App({
   offlineManager: offlineManager,
 });
 
+// PWA Install functionality
 let deferredPrompt;
 const installButton = document.createElement("button");
 installButton.className = "install-button";
@@ -68,6 +72,7 @@ window.addEventListener("appinstalled", () => {
   }
 });
 
+// Handle navigation
 window.addEventListener("hashchange", async () => {
   appShell.setLoadingState(true);
 
@@ -81,17 +86,24 @@ window.addEventListener("hashchange", async () => {
       await app.renderPage();
       updateAuthMenu();
     }
+  } catch (error) {
+    console.error("Error during navigation:", error);
+    appShell.setLoadingState(false);
   } finally {
     appShell.setLoadingState(false);
   }
 });
 
+// Initial load
 window.addEventListener("load", async () => {
+  console.log("App loading started...");
   appShell.setLoadingState(true);
 
   try {
+    // Update auth menu first
     updateAuthMenu();
 
+    // Render initial page
     if (document.startViewTransition) {
       await document.startViewTransition(async () => {
         await app.renderPage();
@@ -100,8 +112,10 @@ window.addEventListener("load", async () => {
       await app.renderPage();
     }
 
+    // Register service worker
     await swRegister();
 
+    // Initialize notifications if user is logged in
     if (authRepository.isLoggedIn()) {
       try {
         await notificationHelper.init();
@@ -111,7 +125,10 @@ window.addEventListener("load", async () => {
       }
     }
 
+    // Check for updates
     checkForUpdates();
+
+    console.log("App loaded successfully");
   } catch (error) {
     console.error("Error during app initialization:", error);
   } finally {
@@ -119,6 +136,7 @@ window.addEventListener("load", async () => {
   }
 });
 
+// Update auth menu function
 const updateAuthMenu = () => {
   const authMenu = document.getElementById("authMenu");
   if (!authMenu) return;
@@ -145,6 +163,7 @@ const updateAuthMenu = () => {
   }
 };
 
+// Check for updates function
 async function checkForUpdates() {
   if ("serviceWorker" in navigator) {
     try {
@@ -174,6 +193,7 @@ async function checkForUpdates() {
   }
 }
 
+// Show update notification function
 function showUpdateNotification() {
   const notification = document.createElement("div");
   notification.className = "update-notification";
@@ -203,6 +223,7 @@ function showUpdateNotification() {
   }, 10000);
 }
 
+// Online/Offline handlers
 window.addEventListener("online", () => {
   appShell.hideOfflineIndicator();
 });
@@ -211,6 +232,7 @@ window.addEventListener("offline", () => {
   appShell.showOfflineIndicator();
 });
 
+// Background sync
 document.addEventListener("visibilitychange", () => {
   if (!document.hidden && navigator.onLine) {
     if ("serviceWorker" in navigator) {
@@ -223,6 +245,7 @@ document.addEventListener("visibilitychange", () => {
   }
 });
 
+// Service worker messages
 if ("serviceWorker" in navigator) {
   navigator.serviceWorker.addEventListener("message", (event) => {
     if (event.data && event.data.type === "BACKGROUND_SYNC") {
@@ -232,6 +255,7 @@ if ("serviceWorker" in navigator) {
   });
 }
 
+// Performance monitoring
 if ("performance" in window) {
   window.addEventListener("load", () => {
     setTimeout(() => {
@@ -245,6 +269,7 @@ if ("performance" in window) {
   });
 }
 
+// Global app object
 window.StoryShareApp = {
   appShell,
   authRepository,
@@ -252,3 +277,19 @@ window.StoryShareApp = {
   offlineManager,
   app,
 };
+
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", () => {
+    navigator.serviceWorker
+      .register("/sw.js")
+      .then((registration) => {
+        console.log(
+          "Service Worker registered with scope:",
+          registration.scope
+        );
+      })
+      .catch((error) => {
+        console.error("Service Worker registration failed:", error);
+      });
+  });
+}
